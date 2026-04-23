@@ -1,0 +1,378 @@
+Refine and upgrade the existing Cydestore project into a polished, production-ready, conversion-focused electronics e-commerce platform with a separate secure admin web app.
+
+IMPORTANT:
+This is an upgrade/refinement of the existing project, not a redesign from zero. Keep the current architecture unless there is a strong technical reason to improve it. Preserve the customer-facing website, the separate admin app, the backend API, and the WhatsApp ordering flow, while making the whole system more professional, user-friendly, easier to manage, and fully ready for live hosting.
+
+PROJECT CONTEXT:
+- Store name: Cydestore
+- Business type: electronics and merchandise store
+- Products include: laptops, smartphones, tablets, chargers, headphones, accessories, smart devices, power banks, computer accessories, phone accessories, and related goods
+- Store address: Tom Mboya Street, Rural Urban Building, Shop B4, Moi, Nairobi, Kenya
+- Store email: cydeboost@gmail.com
+- Ordering method: customers place orders and inquiries through WhatsApp, not through card payments
+- Current stack is full-stack and should remain modern, scalable, maintainable, and production-ready
+
+PRIMARY GOAL:
+Make the website excellent at helping users discover products and contact the business to buy them. Improve trust, product browsing, product presentation, WhatsApp conversion flow, performance, admin usability, responsiveness, and production readiness.
+
+CORE BUSINESS FLOW:
+The website must make it extremely easy for a customer to:
+1. land on the homepage
+2. browse products and categories
+3. search and filter products
+4. open a product detail page
+5. see clear pricing, availability, images, specs, and trust signals
+6. click a strong WhatsApp CTA to order or ask a question
+7. send a pre-filled WhatsApp message with the product name already included
+
+WHATSAPP ORDERING:
+- Keep WhatsApp ordering as the main conversion mechanism
+- Use the business WhatsApp number from settings so it is editable in admin
+- Every product page and product card should have WhatsApp CTA buttons such as:
+  - Buy on WhatsApp
+  - Ask About This Product
+  - Check Availability
+  - Request Bulk Price
+- Messages must be dynamic and include the product name
+- Example message:
+  “Hello, I am interested in buying [Product Name]. Please share price, availability, and delivery details.”
+- Ensure the WhatsApp number is stored in the database and editable from admin settings
+- Add a floating WhatsApp button on the customer-facing site
+
+DESIGN / UI / UX REQUIREMENTS:
+Upgrade the existing design so it looks premium, trustworthy, modern, and easy to use.
+The site must be:
+- visually polished
+- mobile-first
+- fully responsive
+- fast-loading
+- clean and modern
+- easy to navigate
+- conversion-focused
+- accessible
+- consistent across pages
+- attractive for electronics shoppers
+
+Improve:
+- homepage layout and hierarchy
+- hero section
+- product cards
+- spacing and typography
+- color consistency
+- buttons and calls to action
+- category presentation
+- trust-building sections
+- hover states and micro-interactions
+- loading states and empty states
+- sticky header
+- footer
+- mobile navigation
+- search and filter experience
+- product detail page clarity
+- admin dashboard usability
+
+Support both:
+- light mode
+- dark mode
+Make both themes fully polished, accessible, and consistent.
+
+CUSTOMER-FACING WEBSITE REQUIREMENTS:
+Refine or build the following pages and ensure all work beautifully:
+- Home
+- Shop / All Products
+- Product Details
+- Categories
+- Category Details
+- About
+- Contact
+- FAQ
+- Deals / Promotions if useful
+- 404 page
+
+HOMEPAGE MUST INCLUDE:
+- premium hero section with strong headline and CTA
+- featured products
+- top categories
+- new arrivals
+- best sellers
+- promotional banners
+- why choose us section
+- testimonials
+- trust indicators
+- WhatsApp contact section
+- store location/contact details
+- footer with useful links and business info
+
+SHOP PAGE MUST INCLUDE:
+- clean product grid
+- search
+- filters by category
+- filters by brand
+- price range filter
+- stock/availability filter
+- sort by newest, price, popularity
+- pagination or lazy loading
+- product quick actions
+- product badges for featured, best seller, new, discount, out of stock, low stock
+
+PRODUCT DETAIL PAGE MUST INCLUDE:
+- image gallery
+- main image with zoom if possible
+- product title
+- price
+- old price if discounted
+- stock status
+- short description
+- full description
+- technical specifications
+- SKU
+- brand
+- category
+- related products
+- strong WhatsApp order CTA
+- ask/question CTA
+- share product option
+- trust or delivery information
+- clean image presentation
+- excellent mobile layout
+
+CONTACT PAGE MUST INCLUDE:
+- WhatsApp contact button
+- contact form
+- store address
+- phone
+- email
+- map placeholder or embed support
+- business hours if available
+
+ABOUT PAGE MUST INCLUDE:
+- clear company introduction
+- why customers should trust the store
+- mission/value proposition
+- strong local business credibility
+
+FAQ PAGE MUST INCLUDE:
+- accordion layout
+- fully manageable from admin
+
+ADMIN WEB APP REQUIREMENTS:
+Create or refine a completely separate secure admin webpage/app for managing the store.
+This admin app must not be mixed into the public storefront UI.
+It should have its own login, protected routes, and clean dashboard.
+
+ADMIN MUST BE ABLE TO MANAGE:
+- products
+- categories
+- brands
+- product prices
+- discount prices
+- stock quantities
+- stock status
+- product descriptions
+- technical specifications
+- featured flags
+- best seller flags
+- new arrival flags
+- published/hidden status
+- product images
+- gallery images
+- homepage banners
+- testimonials
+- FAQs
+- store settings
+- store logo
+- contact details
+- WhatsApp number
+- address
+- social links
+- SEO fields
+- homepage section content
+
+ADMIN DASHBOARD MUST INCLUDE:
+- overview cards
+- total products
+- total categories
+- featured products count
+- low stock count
+- out of stock count
+- recent product updates
+- recent admin activity if possible
+- easy navigation
+- responsive layout for tablet and mobile
+- clean forms and tables
+- image upload and preview
+- validation and clear success/error messages
+
+PRODUCT ADMIN FORM MUST SUPPORT:
+- product name
+- slug
+- category
+- brand
+- price
+- old price
+- discount display
+- stock quantity
+- stock status
+- SKU
+- short description
+- full description
+- technical specifications
+- main image
+- multiple gallery images
+- featured toggle
+- best seller toggle
+- new arrival toggle
+- published toggle
+- SEO title
+- SEO description
+
+IMAGE MANAGEMENT:
+Make image handling production-friendly.
+- allow upload of main product image and multiple gallery images
+- support preview before save
+- validate file type and size
+- ensure images display properly on frontend
+- use a structured storage approach that works locally in development and can be migrated cleanly to cloud/object storage in production
+- prevent broken image paths
+- include fallback image handling
+
+PRODUCTION / LIVE HOSTING READINESS:
+Make the project fully equipped to be hosted live without major issues.
+Implement or improve the following:
+
+1. ENVIRONMENT AND CONFIG
+- clean environment variable setup
+- example env file
+- separate development and production configuration
+- no hardcoded secrets
+- no exposing admin secrets to frontend
+
+2. DATABASE
+- production-safe PostgreSQL configuration
+- migrations/schema sync setup
+- seed script for demo/sample data
+- safe connection handling
+- validation for DB writes
+
+3. AUTHENTICATION AND SECURITY
+- secure admin authentication
+- hashed passwords
+- protected admin routes
+- session or token security
+- rate limiting for login if possible
+- CSRF/security best practices where appropriate
+- input validation on all forms
+- sanitization for dangerous inputs
+- secure file upload handling
+- proper error handling without exposing sensitive internals
+
+4. PERFORMANCE
+- optimize images
+- lazy loading where useful
+- good caching strategy
+- efficient product queries
+- responsive image rendering
+- minimize unnecessary rerenders
+- production build optimization
+
+5. SEO
+- page titles and meta descriptions
+- product SEO fields
+- Open Graph support
+- Twitter/X metadata
+- sitemap generation if possible
+- robots support
+- clean URLs/slugs
+- structured data where useful for products and organization
+
+6. ACCESSIBILITY
+- semantic HTML
+- keyboard navigation
+- proper labels
+- good contrast
+- focus states
+- accessible forms and dialogs
+
+7. RELIABILITY
+- proper 404 and error pages
+- graceful loading/error states
+- fallback UI for missing content
+- prevent crashes due to missing images or incomplete product data
+- health-check readiness for deployment if appropriate
+
+8. DEPLOYMENT SUPPORT
+- include clear instructions for deploying frontend, backend, database, and admin
+- ensure the app can run in production with proper build/start commands
+- make it compatible with common hosting platforms
+- provide notes for domain setup, environment variables, database connection, and static asset hosting
+- make sure public storefront, admin app, and API paths work correctly in production
+
+9. MAINTAINABILITY
+- clean folder structure
+- reusable components
+- shared types where appropriate
+- clear API/service separation
+- consistent naming
+- clean code comments only where useful
+- remove dead code and rough edges
+
+USER-FRIENDLINESS IMPROVEMENTS:
+Make the site feel easy and pleasant for real shoppers.
+Add or refine:
+- simple navigation
+- strong visible CTAs
+- clear product availability labels
+- trust messaging
+- delivery/inquiry reassurance
+- intuitive filter UI
+- smooth mobile interactions
+- polished empty states
+- recently viewed products if practical
+- related products
+- product share option
+- better homepage product discovery
+- user-friendly wording throughout
+
+SAMPLE CONTENT:
+Populate the system with realistic sample categories, brands, products, product specs, banners, FAQs, testimonials, and store settings so the site looks complete and professional immediately.
+
+DATA MODEL EXPECTATIONS:
+Ensure the database cleanly supports:
+- products
+- product images
+- categories
+- brands
+- banners
+- testimonials
+- FAQs
+- store settings
+- admin users
+- SEO fields where needed
+
+IMPORTANT IMPLEMENTATION RULES:
+- Do not remove the separate admin app
+- Do not remove WhatsApp ordering
+- Do not add card payment integration
+- Do not leave placeholder sections unfinished
+- Do not break existing routes unless necessary; if routes change, update all links consistently
+- Keep everything responsive and production-safe
+- Make the system easy for a non-technical admin to update
+
+FINAL DELIVERABLE:
+Return a fully refined, production-ready codebase with:
+- improved storefront
+- separate secure admin webpage
+- complete CRUD management for products and site content
+- stable API/backend
+- database schema and seed data
+- polished UI
+- better UX for shoppers
+- deployment-ready configuration
+- clear setup and hosting instructions
+- no major missing sections
+- no obvious broken flows
+
+Success means:
+A customer can easily browse products and contact the business on WhatsApp to buy.
+An admin can easily log in and update prices, products, images, stock, FAQs, banners, and store information.
+The full system can be hosted live cleanly and used without major technical problems.

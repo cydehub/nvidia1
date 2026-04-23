@@ -1,0 +1,32 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "bxY_W4n6c7gFGkvVyumjJ"
+uri = "file://artifacts/cydestore-admin/src/assets/logo.png"
+type = "image"
+title = "Cydestore admin wordmark logo"
+
+[[generated]]
+id = "NObDwFRsZXFVJyr6gxwut"
+uri = "file://artifacts/electronics-store/src/assets/hero-bg.png"
+type = "image"
+title = "Modern electronics hero background"
+
+[[generated]]
+id = "pIqx6aL8oDRr9hJLHFmkd"
+uri = "file://artifacts/electronics-store/src/assets/logo.png"
+type = "image"
+title = "Cydestore logo wordmark"
+
+[[generated]]
+id = "6-E2u_h9PTizYAG3K6Sqo"
+uri = "file://artifacts/electronics-store/src/assets/banner-phones.png"
+type = "image"
+title = "Smartphone promo banner"
+
+[[generated]]
+id = "eCvw7I9tNvGc5VQ6ouQm8"
+uri = "file://artifacts/electronics-store/src/assets/banner-laptops.png"
+type = "image"
+title = "Laptop promo banner"
