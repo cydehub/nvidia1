@@ -5,7 +5,7 @@ import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice, buildWhatsAppUrl } from "@/lib/format";
-import { MessageCircle, Check, AlertCircle, XCircle, Share2, Info, Package, Shield } from "lucide-react";
+import { MessageCircle, Check, AlertCircle, XCircle, Share2, Info, Package, Shield, BadgeCheck } from "lucide-react";
 import { SEO } from "@/components/seo";
 
 export default function ProductDetail() {

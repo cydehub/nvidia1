@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import { useLocation, useParams } from "wouter";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,7 @@ import {
   getGetProductQueryKey
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, Plus, Trash2, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, Trash2, Image as ImageIcon, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,6 +64,10 @@ const productSchema = z.object({
   })).optional()
 });
 
+const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const canUploadImages = Boolean(cloudinaryCloudName && cloudinaryUploadPreset);
+
 export default function ProductForm() {
   const [, setLocation] = useLocation();
   const params = useParams();
@@ -82,6 +86,8 @@ export default function ProductForm() {
 
   const createMutation = useCreateProduct();
   const updateMutation = useUpdateProduct();
+  const [isUploadingMainImage, setIsUploadingMainImage] = useState(false);
+  const [uploadingGalleryIndex, setUploadingGalleryIndex] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -148,6 +154,83 @@ export default function ProductForm() {
     const name = form.getValues("name");
     if (name) {
       form.setValue("slug", name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, ""));
+    }
+  };
+
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+      throw new Error("Image uploads are not configured");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", cloudinaryUploadPreset);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    const payload = (await response.json()) as {
+      secure_url?: string;
+      error?: { message?: string };
+    };
+
+    if (!response.ok || !payload.secure_url) {
+      throw new Error(payload.error?.message ?? "Image upload failed");
+    }
+
+    return payload.secure_url;
+  };
+
+  const handleMainImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    try {
+      setIsUploadingMainImage(true);
+      const imageUrl = await uploadToCloudinary(file);
+      form.setValue("mainImage", imageUrl, { shouldDirty: true, shouldValidate: true });
+      toast({ title: "Main image uploaded" });
+    } catch (error: any) {
+      toast({
+        title: "Image upload failed",
+        description: error?.message ?? "Could not upload image",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingMainImage(false);
+    }
+  };
+
+  const handleGalleryImageUpload = async (
+    index: number,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    try {
+      setUploadingGalleryIndex(index);
+      const imageUrl = await uploadToCloudinary(file);
+      form.setValue(`gallery.${index}.url`, imageUrl, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      toast({ title: `Gallery image ${index + 1} uploaded` });
+    } catch (error: any) {
+      toast({
+        title: "Image upload failed",
+        description: error?.message ?? "Could not upload image",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingGalleryIndex(null);
     }
   };
 
@@ -305,7 +388,9 @@ export default function ProductForm() {
 
               <Card>
                 <CardHeader><CardTitle>Images</CardTitle>
-                <FormDescription>Paste image URLs (Imgur, Cloudinary, etc.). File upload coming soon.</FormDescription>
+                <p className="text-sm text-muted-foreground">
+                  Upload files directly or paste image URLs. Configure `VITE_CLOUDINARY_CLOUD_NAME` and `VITE_CLOUDINARY_UPLOAD_PRESET` to enable uploads.
+                </p>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <FormField control={form.control} name="mainImage" render={({ field }) => (
@@ -314,6 +399,27 @@ export default function ProductForm() {
                       <div className="flex items-start gap-4">
                         <div className="flex-1 space-y-2">
                           <FormControl><Input placeholder="https://..." {...field} value={field.value || ""} /></FormControl>
+                          <input
+                            id="main-image-upload"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleMainImageUpload}
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            disabled={!canUploadImages || isUploadingMainImage}
+                            onClick={() => (document.getElementById("main-image-upload") as HTMLInputElement | null)?.click()}
+                          >
+                            {isUploadingMainImage ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Upload className="mr-2 h-4 w-4" />
+                            )}
+                            Upload Main Image
+                          </Button>
                           <FormMessage />
                         </div>
                         {field.value ? (
@@ -328,12 +434,33 @@ export default function ProductForm() {
                   )} />
                   
                   <div className="space-y-4">
-                    <FormLabel>Gallery Images</FormLabel>
+                    <p className="text-sm font-medium">Gallery Images</p>
                     {galleryFields.map((field, index) => (
                       <div key={field.id} className="flex items-start gap-4">
                         <FormField control={form.control} name={`gallery.${index}.url`} render={({ field: inputField }) => (
                           <FormItem className="flex-1">
                             <FormControl><Input placeholder="https://..." {...inputField} value={inputField.value || ""} /></FormControl>
+                            <input
+                              id={`gallery-upload-${index}`}
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(event) => handleGalleryImageUpload(index, event)}
+                            />
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="secondary"
+                              disabled={!canUploadImages || uploadingGalleryIndex === index}
+                              onClick={() => (document.getElementById(`gallery-upload-${index}`) as HTMLInputElement | null)?.click()}
+                            >
+                              {uploadingGalleryIndex === index ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <Upload className="mr-2 h-4 w-4" />
+                              )}
+                              Upload
+                            </Button>
                             <FormMessage />
                           </FormItem>
                         )} />

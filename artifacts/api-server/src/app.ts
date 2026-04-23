@@ -7,6 +7,18 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
+const isProduction = process.env.NODE_ENV === "production";
+const frontendOrigins = (process.env.FRONTEND_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOrigin: cors.CorsOptions["origin"] =
+  frontendOrigins.length > 0
+    ? frontendOrigins
+    : isProduction
+      ? false
+      : true;
 
 app.use(
   pinoHttp({
@@ -27,7 +39,7 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -39,7 +51,8 @@ app.use(
     name: "admin_session",
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   }),
